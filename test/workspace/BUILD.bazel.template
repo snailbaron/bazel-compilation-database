@@ -1,0 +1,39 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("@snailbaron-compilation-database//:compdb.bzl", "compilation_database")
+load("//:generate_file.bzl", "generate_file")
+
+generate_file(
+    name = "binb_source",
+    out = "binb.cpp",
+    content = """\
+#include <libb.hpp>
+
+#include <iostream>
+
+int main()
+{
+    std::cout << "binb\\n";
+    libb();
+}
+""",
+)
+
+cc_binary(
+    name = "bina",
+    srcs = ["bina.cpp"],
+    deps = ["//liba"],
+)
+
+cc_binary(
+    name = "binb",
+    srcs = ["binb.cpp"],
+    deps = ["//libb"],
+)
+
+compilation_database(
+    name = "compdb",
+    srcs = [
+        "//:bina",
+        "//:binb",
+    ],
+)

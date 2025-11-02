@@ -1,0 +1,27 @@
+module(name = "snailbaron-compilation-database")
+
+bazel_dep(name = "rules_cc", version = "0.2.13")
+
+info = use_repo_rule("//private:info.bzl", "info")
+
+info(name = "info")
+
+bazel_dep(name = "bazel_skylib", version = "1.8.2", dev_dependency = True)
+bazel_dep(name = "rules_python", version = "1.6.3", dev_dependency = True)
+
+python = use_extension(
+    "@rules_python//python/extensions:python.bzl",
+    "python",
+    dev_dependency = True,
+)
+python.defaults(python_version = "3.14")
+python.toolchain(python_version = "3.14")
+
+http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+
+http_file(
+    name = "bazelisk",
+    executable = True,
+    integrity = "sha256-4VCDI/NHrRRlqIe8XSv7kc/8Iy0R6OmXtiMifGsy+3Y=",
+    url = "https://github.com/bazelbuild/bazelisk/releases/download/v1.27.0/bazelisk-linux-amd64",
+)

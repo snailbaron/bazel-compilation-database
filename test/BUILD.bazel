@@ -1,0 +1,40 @@
+load("@info//:info.bzl", "workspace_root")
+load("@rules_python//python:defs.bzl", "py_test")
+load("template.bzl", "expand_directory")
+
+filegroup(
+    name = "workspace_files",
+    srcs = glob(["workspace/**"]),
+)
+
+expand_directory(
+    name = "expand_workspace",
+    srcs = [":workspace_files"],
+    out = "expanded_workspace",
+    root = "workspace",
+    substitutions = {
+        "{SNAILBARON_COMPILATION_DATABASE_PATH}": workspace_root,
+    },
+)
+
+[
+    py_test(
+        name = "test-bazel-" + bazel_version,
+        srcs = ["test.py"],
+        args = [
+            "--workspace-root=test/expanded_workspace",
+            "--bazel-version=" + bazel_version,
+            "--bazelisk=$(rootpath @bazelisk//file)",
+        ],
+        data = [
+            ":expand_workspace",
+            "@bazelisk//file",
+        ],
+        env_inherit = ["HOME"],
+        main = "test.py",
+    )
+    for bazel_version in [
+        "8.4.2",
+        "7.7.0",
+    ]
+]

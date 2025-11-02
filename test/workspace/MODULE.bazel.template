@@ -1,0 +1,9 @@
+module(name = "compdb-test")
+
+bazel_dep(name = "snailbaron-compilation-database")
+local_path_override(
+    module_name = "snailbaron-compilation-database",
+    path = "{SNAILBARON_COMPILATION_DATABASE_PATH}",
+)
+
+bazel_dep(name = "rules_cc", version = "0.2.13")
