@@ -3,7 +3,7 @@ A simple compilation database (`compile_commands.json`) generator for Bazel.
 * Implemented with [aspects](https://bazel.build/extending/aspects).
 * Works with generated sources.
 * The generated `compile_commands.json` contains info for headers.
-* Supports C++ (not C) and [rules_cc](https://github.com/bazelbuild/rules_cc) rules. Might work with custom C++ rules providing [CcInfo](https://bazel.build/rules/lib/providers/CcInfo), but see Limitations.
+* Supports C++ (not C) builds with [rules_cc](https://github.com/bazelbuild/rules_cc) rules. Might work with custom C++ rules providing [CcInfo](https://bazel.build/rules/lib/providers/CcInfo), but see [Limitations](#limitations).
 
 ## Synopsys
 
