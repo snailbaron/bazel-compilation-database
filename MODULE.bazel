@@ -1,4 +1,7 @@
-module(name = "snailbaron-compilation-database")
+module(
+    name = "snailbaron-compilation-database",
+    version = "0.0.1",
+)
 
 bazel_dep(name = "rules_cc", version = "0.2.13")
 
