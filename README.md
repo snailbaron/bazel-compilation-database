@@ -7,10 +7,15 @@ A simple compilation database (`compile_commands.json`) generator for Bazel.
 
 ## Synopsys
 
+`.bazelrc`
+```
+common --registry=https://raw.githubusercontent.com/snailbaron/registry/main
+common --registry=https://bcr.bazel.build
+```
+
 `MODULE.bazel`
 ```bzl
-bazel_dep(name = "snailbaron-compilation-database")
-# currently not uploaded to any registry, so do a git override or something
+bazel_dep(name = "snailbaron-compilation-database", version = "0.0.1")
 ```
 
 `BUILD.bazel`
@@ -31,6 +36,7 @@ In the terminal:
 ```sh
 bazel build //:compdb
 ln -s bazel-bin/compile_commands.json .
+ln -s $(bazel info output_base)/external .
 ```
 
 ## Limitations
