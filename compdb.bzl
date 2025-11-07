@@ -31,6 +31,7 @@ def _compdb_aspect_impl(target, ctx):
         )
 
     cc_toolchain = find_cc_toolchain(ctx)
+
     compilation_context = target[CcInfo].compilation_context
 
     feature_configuration = cc_common.configure_features(
@@ -65,8 +66,14 @@ def _compdb_aspect_impl(target, ctx):
         for dep in ctx.rule.attr.deps:
             file_arguments |= dep[CompdbInfo].file_arguments
 
+    command_line = [compiler_path, "-xc++"] + command_line
+
+    if ctx.attr.add_builtin_include_directories:
+        for path in cc_toolchain.built_in_include_directories:
+            command_line += ["-isystem", path]
+
     for path in source_file_paths:
-        file_arguments[path] = [compiler_path, "-xc++"] + command_line
+        file_arguments[path] = command_line
 
     return CompdbInfo(file_arguments = file_arguments)
 
@@ -76,6 +83,9 @@ compdb_aspect = aspect(
     required_providers = [CcInfo],
     toolchains = use_cc_toolchain(),
     fragments = ["cpp"],
+    attrs = {
+        "add_builtin_include_directories": attr.bool(),
+    },
 )
 
 def _compilation_database_impl(ctx):
@@ -106,6 +116,15 @@ compilation_database = rule(
             mandatory = True,
             aspects = [compdb_aspect],
             doc = "targets to build compilation database for",
+        ),
+        "add_builtin_include_directories": attr.bool(
+            default = False,
+            doc = """\
+Add built-in include directories to the compilation database. Each directory is
+added as an -isystem value. The directories are taken from
+cxx_builtin_include_directories of cc_common.create_cc_toolchain_config_info,
+preserving the order.
+""",
         ),
     },
 )
