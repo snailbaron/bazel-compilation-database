@@ -15,7 +15,7 @@ common --registry=https://bcr.bazel.build
 
 `MODULE.bazel`
 ```bzl
-bazel_dep(name = "snailbaron-compilation-database", version = "0.0.1")
+bazel_dep(name = "snailbaron-compilation-database", version = "0.0.2")
 ```
 
 `BUILD.bazel`
